@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 const sections = [
@@ -547,7 +548,14 @@ export default function Home() {
           <div className="orbit orbit-b" />
           <div className="ghost" />
           <div className="photo">
-            <img src="/jayesh-hero.jpg" alt="Jayesh Devley" />
+            <Image
+              src="/jayesh-hero.jpg"
+              alt="Jayesh Devley"
+              width={500}
+              height={625}
+              priority
+              sizes="(max-width: 760px) 82vw, 500px"
+            />
             <div className="photo-overlay" />
           </div>
           <div className="future">
