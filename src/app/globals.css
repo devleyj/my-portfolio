@@ -2632,3 +2632,239 @@ html {
     width: 100%;
   }
 }
+
+/* =========================================
+   MOBILE NAVIGATION
+   ========================================= */
+
+@media (max-width: 900px) {
+  .header {
+    padding: 18px 22px;
+  }
+
+  .nav {
+    position: fixed;
+    top: 76px;
+    left: 18px;
+    right: 18px;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 12px;
+
+    border: 1px solid rgba(110, 180, 255, 0.14);
+    border-radius: 16px;
+
+    background: rgba(4, 10, 19, 0.94);
+    backdrop-filter: blur(18px);
+
+    box-shadow:
+      0 25px 60px rgba(0, 0, 0, 0.4);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+
+    transition:
+      opacity 0.25s ease,
+      transform 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+  .nav.nav-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav button {
+    width: 100%;
+    padding: 14px 16px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: #718097;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .nav button:hover,
+  .nav button.active {
+    background: rgba(98, 215, 255, 0.06);
+    color: #62d7ff;
+  }
+
+  .nav button::after {
+    display: none;
+  }
+
+  .connect {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+    width: 42px;
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+
+    border: 1px solid rgba(110, 180, 255, 0.16);
+    border-radius: 10px;
+
+    background: rgba(10, 18, 32, 0.6);
+  }
+
+  .hamburger i {
+    display: block;
+    width: 17px;
+    height: 1px;
+    background: #aab8cc;
+    transition:
+      transform 0.25s ease,
+      opacity 0.25s ease;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 15px 16px;
+  }
+
+  .logo {
+    font-size: 13px;
+  }
+
+  .logo-box {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav {
+    top: 68px;
+    left: 12px;
+    right: 12px;
+  }
+}
+
+/* =========================================
+   FINAL MOBILE HERO PORTRAIT FIX
+   ========================================= */
+
+@media (max-width: 760px) {
+  .hero {
+    display: block;
+    min-height: auto;
+    padding: 105px 22px 60px;
+  }
+
+  .hero-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 520px;
+    margin-top: 35px;
+    overflow: visible;
+    transform: none !important;
+  }
+
+  .photo {
+    position: relative;
+    z-index: 5;
+    display: block;
+    width: min(330px, 82vw);
+    height: min(450px, 112vw);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none;
+  }
+
+  .photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 12%;
+  }
+
+  .glow-a {
+    width: 360px;
+    height: 360px;
+  }
+
+  .glow-b {
+    width: 220px;
+    height: 220px;
+  }
+
+  .orbit-a {
+    width: 430px;
+    height: 430px;
+  }
+
+  .orbit-b {
+    width: 470px;
+    height: 250px;
+  }
+
+  .ghost {
+    display: none !important;
+  }
+
+  .future {
+    z-index: 8;
+    left: 0;
+    top: 42%;
+  }
+
+  .code-hud {
+    z-index: 10;
+    right: -5px;
+    top: 5%;
+    width: 245px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-art {
+    height: 470px;
+  }
+
+  .photo {
+    width: 280px;
+    height: 380px;
+  }
+
+  .orbit-a {
+    width: 350px;
+    height: 350px;
+  }
+
+  .orbit-b {
+    width: 390px;
+    height: 220px;
+  }
+
+  .code-hud {
+    width: 205px;
+    right: -8px;
+    font-size: 8px;
+  }
+
+  .future {
+    left: -2px;
+    font-size: 18px;
+  }
+}
