@@ -29,6 +29,16 @@ const skills = [
 export default function Home() {
   const [menu, setMenu] = useState(false);
   const [active, setActive] = useState("Home");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1600);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const [cursorHover, setCursorHover] = useState(false);
 
   const [gameRunning, setGameRunning] = useState(false);
@@ -306,28 +316,21 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-    useEffect(() => {
-    const isTouchDevice =
-      window.matchMedia("(pointer: coarse)").matches;
+  useEffect(() => {
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
     if (isTouchDevice) return;
 
-    const hero = document.querySelector(
-      ".hero"
-    ) as HTMLElement | null;
+    const hero = document.querySelector(".hero") as HTMLElement | null;
 
-    const heroArt = document.querySelector(
-      ".hero-art"
-    ) as HTMLElement | null;
+    const heroArt = document.querySelector(".hero-art") as HTMLElement | null;
 
     if (!hero || !heroArt) return;
 
     const handleMouseMove = (event: MouseEvent) => {
-      const x =
-        (event.clientX / window.innerWidth - 0.5) * 2;
+      const x = (event.clientX / window.innerWidth - 0.5) * 2;
 
-      const y =
-        (event.clientY / window.innerHeight - 0.5) * 2;
+      const y = (event.clientY / window.innerHeight - 0.5) * 2;
 
       heroArt.style.transform = `
         translate3d(
@@ -407,6 +410,38 @@ export default function Home() {
 
   return (
     <main>
+      {loading && (
+        <div className="loading-screen">
+          <div className="loading-inner">
+            <div className="loading-top">
+              <span>JAYESH.DEV</span>
+              <span>2026</span>
+            </div>
+
+            <div className="loading-center">
+              <div className="loading-mark">JD</div>
+
+              <span className="loading-label">INITIALIZING PORTFOLIO</span>
+
+              <strong>
+                Building <em>ideas.</em>
+              </strong>
+            </div>
+
+            <div className="loading-bottom">
+              <span>SYSTEM ONLINE</span>
+              <span>
+                LOADING <b>100%</b>
+              </span>
+            </div>
+
+            <div className="loading-line">
+              <i />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={`custom-cursor ${cursorHover ? "cursor-hover" : ""}`} />
 
       <div
