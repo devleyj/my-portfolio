@@ -32,6 +32,12 @@ export default function Home() {
   const [active, setActive] = useState("Home");
   const [loading, setLoading] = useState(true);
 
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactStatus, setContactStatus] = useState("");
+  const [contactLoading, setContactLoading] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -407,6 +413,46 @@ export default function Home() {
       .getElementById(name.toLowerCase())
       ?.scrollIntoView({ behavior: "smooth" });
     setMenu(false);
+  };
+
+  const handleContactSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+
+    setContactLoading(true);
+    setContactStatus("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          message: contactMessage,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setContactStatus(data.message || "Something went wrong.");
+        return;
+      }
+
+      setContactStatus("Message sent successfully.");
+
+      setContactName("");
+      setContactEmail("");
+      setContactMessage("");
+    } catch {
+      setContactStatus("Unable to send your message. Please try again.");
+    } finally {
+      setContactLoading(false);
+    }
   };
 
   return (
@@ -1023,11 +1069,62 @@ export default function Home() {
               talk about an idea, reach out.
             </p>
 
-            <a className="contact-email" href="mailto:devleyj@gmail.com">
-              <span>EMAIL</span>
-              devleyj@gmail.com
-              <b>↗</b>
-            </a>
+            <form className="contact-form" onSubmit={handleContactSubmit}>
+              <div className="contact-field">
+                <label htmlFor="contact-name">NAME</label>
+
+                <input
+                  id="contact-name"
+                  type="text"
+                  placeholder="Your name"
+                  value={contactName}
+                  onChange={(event) => setContactName(event.target.value)}
+                  required
+                  minLength={2}
+                />
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="contact-email">EMAIL</label>
+
+                <input
+                  id="contact-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={contactEmail}
+                  onChange={(event) => setContactEmail(event.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="contact-message">MESSAGE</label>
+
+                <textarea
+                  id="contact-message"
+                  placeholder="Tell me about your idea..."
+                  value={contactMessage}
+                  onChange={(event) => setContactMessage(event.target.value)}
+                  required
+                  minLength={10}
+                  rows={5}
+                />
+              </div>
+
+              <button
+                className="contact-submit"
+                type="submit"
+                disabled={contactLoading}
+              >
+                {contactLoading ? "SENDING..." : "SEND MESSAGE ↗"}
+              </button>
+
+              {contactStatus && (
+                <p className="contact-status" role="status">
+                  {contactStatus}
+                </p>
+              )}
+            </form>
           </div>
 
           <div className="contact-terminal">
