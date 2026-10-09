@@ -22,3 +22,8 @@ export * from './enums';
  * 
  */
 export type ContactMessage = Prisma.ContactMessageModel
+/**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel

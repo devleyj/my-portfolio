@@ -46,6 +46,25 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const response = await fetch("/api/projects");
+
+        if (!response.ok) {
+          throw new Error("Failed to load projects");
+        }
+
+        const data = await response.json();
+        setProjects(data);
+      } catch (error) {
+        console.error("Failed to load projects:", error);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
   const [cursorHover, setCursorHover] = useState(false);
 
   const [gameRunning, setGameRunning] = useState(false);
@@ -54,6 +73,18 @@ export default function Home() {
   const [gameLevel, setGameLevel] = useState(1);
   const [gameBest, setGameBest] = useState(0);
   const [gameCombo, setGameCombo] = useState(0);
+
+  const [projects, setProjects] = useState<
+    {
+      id: number;
+      title: string;
+      category: string;
+      status: string;
+      description: string;
+      tags: string;
+      featured: boolean;
+    }[]
+  >([]);
 
   const playerPosition = useRef(50);
   const gameFrame = useRef<number | null>(null);
@@ -440,7 +471,6 @@ export default function Home() {
 
       if (!response.ok) {
         setContactStatus(data.message || "Something went wrong.");
-        return;
       }
 
       setContactStatus("Message sent successfully.");
@@ -454,6 +484,8 @@ export default function Home() {
       setContactLoading(false);
     }
   };
+
+  const featuredProject = projects.find((project) => project.featured);
 
   return (
     <main>
@@ -530,26 +562,32 @@ export default function Home() {
       </header>
 
       <section id="home" className="hero">
-        <div className="hero-noise" />
         <div className="hero-copy">
-          <div className="kicker">PORTFOLIO / 2026</div>
-          <div className="hi">Hi, I&apos;m</div>
+          <div className="kicker">JAYESH DEVLEY / 2026</div>
+
+          <div className="hi">Hello, I&apos;m</div>
+
           <h1>
             Jayesh <span>Devley</span>
           </h1>
+
           <h2>
-            Building <span>Ideas</span> into Reality
+            Building <span>Ideas</span>
+            <br />
+            into Reality.
           </h2>
+
           <p>
             Exploring ideas, building skills, and creating things that matter.
           </p>
 
           <div className="actions">
             <button className="primary" onClick={() => go("Skills")}>
-              ✦ &nbsp; Explore My Skills <b>↘</b>
+              Explore My Skills <b>↓</b>
             </button>
+
             <button className="secondary" onClick={() => go("Contact")}>
-              ✉ &nbsp; Get In Touch <b>↗</b>
+              Get In Touch <b>↗</b>
             </button>
           </div>
 
@@ -559,40 +597,39 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              <span>◉</span> GitHub
+              GitHub
             </a>
+
             <i />
+
             <a
               href="https://www.linkedin.com/in/jayesh-devley-6b028a37a/"
               target="_blank"
               rel="noreferrer"
             >
-              <span>in</span> LinkedIn
+              LinkedIn
             </a>
+
             <i />
-            <a href="mailto:devleyj@gmail.com">
-              <span>✉</span> Email
-            </a>
+
+            <a href="mailto:devleyj@gmail.com">Email</a>
           </div>
 
           <button className="game-chip" onClick={() => go("Play")}>
-            <span className="game-icon">⌁</span>
+            <span className="game-icon">✦</span>
+
             <span>
-              <strong>CODE COLLECTOR</strong>
-              <small>Small game. Big fun.</small>
+              <strong>CODE RUNNER</strong>
+              <small>A small game I built for fun.</small>
             </span>
-            <b>›</b>
+
+            <b>↗</b>
           </button>
 
-          <div className="signature">Jayesh Devley</div>
+          <div className="signature">J.D.</div>
         </div>
 
         <div className="hero-art">
-          <div className="glow glow-a" />
-          <div className="glow glow-b" />
-          <div className="orbit orbit-a" />
-          <div className="orbit orbit-b" />
-          <div className="ghost" />
           <div className="photo">
             <Image
               src="/jayesh-hero.jpg"
@@ -602,19 +639,31 @@ export default function Home() {
               priority
               sizes="(max-width: 760px) 82vw, 500px"
             />
+
             <div className="photo-overlay" />
           </div>
-          <div className="future">
-            Future
-            <br />
-            Developer
+
+          <div className="photo-caption">
+            <span>01</span>
+            <span>PORTRAIT / BUILDER</span>
           </div>
-          <div className="code-hud">
-            <span>
-              const <em>dream</em> = {"{"}
-            </span>
-            <span>learn: true, build: true,</span>
-            <span>grow: true, impact: true {"}"}</span>
+
+          <div className="hero-stamp">
+            <span>WORK</span>
+            <strong>
+              IN
+              <br />
+              PROGRESS
+            </strong>
+            <small>EST. 2026</small>
+          </div>
+
+          <div className="hero-note">
+            Learning.
+            <br />
+            Building.
+            <br />
+            Repeating.
           </div>
         </div>
 
@@ -630,423 +679,818 @@ export default function Home() {
             </button>
           ))}
         </div>
+
+        <div className="hero-bottom">
+          <span>SCROLL TO EXPLORE</span>
+          <span>↓</span>
+          <span>INDIA / 2026</span>
+        </div>
       </section>
 
-      <section id="about" className="section about-section">
-        <div className="label">01 / ABOUT</div>
+      <section id="about" className="about-section">
+        <div className="section-heading">
+          <span className="section-index">02 / ABOUT</span>
+          <span className="section-rule" />
+          <span className="section-note">A LITTLE CONTEXT</span>
+        </div>
 
         <div className="about-layout">
-          <div className="about-heading">
-            <span className="kicker">THE PERSON BEHIND THE CODE</span>
+          <div className="about-intro">
+            <p className="about-eyebrow">WHO I AM</p>
 
-            <h3>
-              Learning by
+            <h2>
+              Still learning.
               <br />
-              <span>building.</span>
-            </h3>
+              Still <em>building.</em>
+            </h2>
 
-            <div className="about-status">
-              <span className="status-dot" />
-              <span>CURIOUS · BUILDING · EVOLVING</span>
-            </div>
-          </div>
-
-          <div className="about-content">
             <p className="about-lead">
-              I&apos;m Jayesh Devley — a developer in the making, turning
-              curiosity into practical skills and ideas into digital
-              experiences.
+              I&apos;m Jayesh Devley, a developer who enjoys turning ideas into
+              things that can actually be used.
             </p>
 
-            <p>
-              This portfolio is my evolving workspace: a place to show what
-              I&apos;m learning, what I&apos;m experimenting with, and what
-              I&apos;ll build next.
+            <p className="about-text">
+              I&apos;m currently exploring web development, programming, UI/UX,
+              APIs, databases, and AI. I like understanding how things work,
+              experimenting with different approaches, and slowly turning what I
+              learn into real projects.
             </p>
 
-            <div className="about-terminal">
-              <div className="terminal-top">
-                <span />
-                <span />
-                <span />
-                <b>jayesh.dev</b>
-              </div>
+            <p className="about-text">
+              I&apos;m not trying to have everything figured out yet. I&apos;m
+              focused on building a strong foundation, working on meaningful
+              ideas, and learning through the process.
+            </p>
+          </div>
 
-              <div className="terminal-body">
-                <div>
-                  <em>const</em> developer = {"{"}
-                </div>
-                <div className="terminal-indent">
-                  mindset: <strong>&quot;keep learning&quot;</strong>,
-                </div>
-                <div className="terminal-indent">
-                  focus: <strong>&quot;build useful things&quot;</strong>,
-                </div>
-                <div className="terminal-indent">
-                  future: <strong>&quot;still loading...&quot;</strong>
-                </div>
-                <div>{"}"};</div>
-              </div>
+          <div className="about-side">
+            <div className="about-card">
+              <span className="about-card-label">CURRENTLY</span>
+
+              <h3>Building the foundation.</h3>
+
+              <p>Learning by making, breaking, fixing, and trying again.</p>
+
+              <div className="about-card-line" />
+
+              <span className="about-card-year">2026 →</span>
             </div>
 
-            <div className="about-stats">
-              <div>
-                <strong>10+</strong>
-                <span>TECH SKILLS</span>
+            <div className="about-note">
+              <span>NOTE / 01</span>
+              <strong>
+                Good work
+                <br />
+                takes time.
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="about-timeline">
+          <div className="timeline-item">
+            <span className="timeline-year">NOW</span>
+
+            <div>
+              <h3>Learning &amp; Experimenting</h3>
+              <p>
+                Web development · Programming · UI/UX · APIs · Databases · AI
+                &amp; GenAI
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline-item">
+            <span className="timeline-year">2026</span>
+
+            <div>
+              <h3>CampusFlow</h3>
+              <p>
+                Exploring an education technology product designed around
+                real-world problems.
+              </p>
+            </div>
+          </div>
+
+          <div className="timeline-item">
+            <span className="timeline-year">NEXT</span>
+
+            <div>
+              <h3>First Production Projects</h3>
+              <p>
+                Taking what I&apos;ve learned and turning it into products
+                people can actually use.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="about-footer">
+          <span>02</span>
+          <span>LEARNING / BUILDING / REPEATING</span>
+          <span>JAYESH DEVLEY</span>
+        </div>
+      </section>
+
+      <section id="skills" className="skills-section">
+        <div className="section-heading">
+          <span className="section-index">03 / SKILLS</span>
+          <span className="section-rule" />
+          <span className="section-note">TOOLS / CRAFT / CURIOSITY</span>
+        </div>
+
+        <div className="skills-intro">
+          <div>
+            <p className="skills-eyebrow">WHAT I&apos;M LEARNING</p>
+
+            <h2>
+              A growing
+              <br />
+              <em>toolbox.</em>
+            </h2>
+          </div>
+
+          <p className="skills-description">
+            I&apos;m building a practical foundation across development, design,
+            data, and AI. Some skills are familiar, others are still being
+            explored — the goal is to keep learning by actually making things.
+          </p>
+        </div>
+
+        <div className="skills-index">
+          <div className="skill-group">
+            <div className="skill-group-head">
+              <span>01</span>
+              <h3>WEB / FRONTEND</h3>
+            </div>
+
+            <div className="skill-list">
+              <div className="skill-row">
+                <span>01</span>
+                <strong>HTML5 &amp; CSS3</strong>
+                <small>Structure / Styling / Responsive Design</small>
               </div>
 
-              <div>
-                <strong>01</strong>
-                <span>BIG DIRECTION</span>
+              <div className="skill-row">
+                <span>02</span>
+                <strong>JavaScript</strong>
+                <small>Logic / Interaction / Web APIs</small>
               </div>
 
-              <div>
-                <strong>∞</strong>
-                <span>THINGS TO BUILD</span>
+              <div className="skill-row">
+                <span>03</span>
+                <strong>React.js</strong>
+                <small>Components / Interfaces / State</small>
+              </div>
+
+              <div className="skill-row">
+                <span>04</span>
+                <strong>Responsive Web Design</strong>
+                <small>Layouts / Mobile / Accessibility</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="skill-group">
+            <div className="skill-group-head">
+              <span>02</span>
+              <h3>PROGRAMMING</h3>
+            </div>
+
+            <div className="skill-list">
+              <div className="skill-row">
+                <span>01</span>
+                <strong>Python</strong>
+                <small>Programming / Automation / Exploration</small>
+              </div>
+
+              <div className="skill-row">
+                <span>02</span>
+                <strong>C / C++</strong>
+                <small>Programming Fundamentals / Problem Solving</small>
+              </div>
+
+              <div className="skill-row">
+                <span>03</span>
+                <strong>Git &amp; GitHub</strong>
+                <small>Version Control / Collaboration</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="skill-group">
+            <div className="skill-group-head">
+              <span>03</span>
+              <h3>DATA / BACKEND</h3>
+            </div>
+
+            <div className="skill-list">
+              <div className="skill-row">
+                <span>01</span>
+                <strong>SQL &amp; Databases</strong>
+                <small>Data / Queries / Persistence</small>
+              </div>
+
+              <div className="skill-row">
+                <span>02</span>
+                <strong>REST APIs</strong>
+                <small>Requests / Integration / Services</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="skill-group">
+            <div className="skill-group-head">
+              <span>04</span>
+              <h3>DESIGN / AI</h3>
+            </div>
+
+            <div className="skill-list">
+              <div className="skill-row">
+                <span>01</span>
+                <strong>UI / UX Design</strong>
+                <small>Interfaces / User Experience / Visual Systems</small>
+              </div>
+
+              <div className="skill-row">
+                <span>02</span>
+                <strong>AI &amp; GenAI</strong>
+                <small>Exploration / Tools / Product Ideas</small>
               </div>
             </div>
           </div>
         </div>
+
+        <div className="skills-quote">
+          <span>FIELD NOTE / 03</span>
+
+          <p>
+            &ldquo;The best way to understand something is to build with
+            it.&rdquo;
+          </p>
+
+          <small>— PERSONAL PRINCIPLE</small>
+        </div>
+
+        <div className="skills-footer">
+          <span>03</span>
+          <span>TOOLS CHANGE. CURIOSITY STAYS.</span>
+          <span>JAYESH DEVLEY</span>
+        </div>
       </section>
 
-      <section id="skills" className="section skills-section">
-        <div className="label">02 / SKILLS</div>
-        <div className="content">
-          <span className="kicker">TECH STACK</span>
-          <h3>
-            Technologies I <span>Work With</span>
-          </h3>
-          <p className="intro">
-            A growing mix of programming, design, web, API, and database skills.
+      <section id="projects" className="projects-section">
+        <div className="section-heading">
+          <span className="section-index">04 / PROJECTS</span>
+          <span className="section-rule" />
+          <span className="section-note">SELECTED WORK / IN PROGRESS</span>
+        </div>
+
+        <div className="projects-intro">
+          <div>
+            <p className="projects-eyebrow">THINGS I&apos;M BUILDING</p>
+
+            <h2>
+              Ideas made
+              <br />
+              <em>real.</em>
+            </h2>
+          </div>
+
+          <p className="projects-description">
+            A small collection of ideas, experiments, and products I&apos;m
+            working on. Some are still taking shape — that&apos;s part of the
+            process.
           </p>
-          <div className="skills-grid">
-            {skills.map((name, index) => (
-              <div className="skill" key={`${name}-${index}`}>
-                <small>{String(index + 1).padStart(2, "0")}</small>
-                <strong>{name}</strong>
-                <b>↗</b>
+        </div>
+
+        {featuredProject && (
+          <article className="featured-project">
+            <div className="featured-project-top">
+              <span>01 / FEATURED PROJECT</span>
+
+              <span>{featuredProject.status}</span>
+            </div>
+
+            <div className="featured-project-body">
+              <div className="featured-project-main">
+                <span className="project-label">
+                  {featuredProject.category}
+                </span>
+
+                <h3>{featuredProject.title}</h3>
+
+                <p>{featuredProject.description}</p>
+
+                <div className="project-tags">
+                  {featuredProject.tags.split(",").map((tag) => (
+                    <span key={tag.trim()}>{tag.trim()}</span>
+                  ))}
+                </div>
               </div>
+
+              <div className="featured-project-side">
+                <div className="project-fact">
+                  <span>PROJECT</span>
+                  <strong>{featuredProject.title}</strong>
+                </div>
+
+                <div className="project-fact">
+                  <span>STATUS</span>
+                  <strong>{featuredProject.status}</strong>
+                </div>
+
+                <div className="project-fact">
+                  <span>STARTED</span>
+                  <strong>2026</strong>
+                </div>
+
+                <div className="project-mark">
+                  <span>CF</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="featured-project-footer">
+              <span>EDUCATION / TECHNOLOGY / PRODUCT</span>
+
+              <span>IN THE MAKING →</span>
+            </div>
+          </article>
+        )}
+
+        <div className="projects-list">
+          <div className="projects-list-heading">
+            <span>OTHER WORK</span>
+            <span>02 —</span>
+          </div>
+
+          {projects
+            .filter((project) => !project.featured)
+            .map((project, index) => (
+              <article className="project-row" key={project.id}>
+                <span className="project-row-number">
+                  {String(index + 2).padStart(2, "0")}
+                </span>
+
+                <div className="project-row-main">
+                  <span>{project.category}</span>
+
+                  <h3>{project.title}</h3>
+
+                  <p>{project.description}</p>
+                </div>
+
+                <div className="project-row-meta">
+                  <span>{project.status}</span>
+
+                  <div className="project-tags">
+                    {project.tags.split(",").map((tag) => (
+                      <span key={tag.trim()}>{tag.trim()}</span>
+                    ))}
+                  </div>
+                </div>
+
+                <span className="project-row-arrow">↗</span>
+              </article>
             ))}
-          </div>
         </div>
-      </section>
 
-      <section id="projects" className="section">
-        <div className="label">03 / PROJECTS</div>
+        <div className="projects-note">
+          <span>FIELD NOTE / 04</span>
 
-        <div className="content">
-          <span className="kicker">SELECTED WORK</span>
-
-          <h3>
-            Building <span>ideas.</span>
-          </h3>
-
-          <p className="intro">
-            A look at the ideas I’m turning into real products, experiments, and
-            experiences.
+          <p>
+            Not everything needs to be finished before it becomes worth
+            building.
           </p>
+        </div>
 
-          <div className="projects-grid">
-            <article className="project-card featured-project">
-              <div className="project-top">
-                <span className="project-number">01</span>
-                <span className="project-status">IN DEVELOPMENT</span>
-              </div>
-
-              <div className="project-content">
-                <span className="project-label">EDUCATION • SAAS • AI</span>
-
-                <h4>CampusFlow</h4>
-
-                <p>
-                  A modern education management platform concept designed to
-                  connect schools, coaching centers, teachers, students,
-                  parents, and administrators in one intelligent ecosystem.
-                </p>
-
-                <div className="project-tags">
-                  <span>Next.js</span>
-                  <span>React</span>
-                  <span>AI & GenAI</span>
-                  <span>Database</span>
-                </div>
-              </div>
-
-              <div className="project-footer">
-                <span>Building the idea →</span>
-                <b>↗</b>
-              </div>
-            </article>
-
-            <article className="project-card">
-              <div className="project-top">
-                <span className="project-number">02</span>
-                <span className="project-status">EXPLORING</span>
-              </div>
-
-              <div className="project-content">
-                <span className="project-label">FUTURE PROJECT</span>
-
-                <h4>Coming Soon.</h4>
-
-                <p>
-                  The next project will appear here as I turn another idea into
-                  a real-world product.
-                </p>
-
-                <div className="project-tags">
-                  <span>Ideas</span>
-                  <span>Experiments</span>
-                  <span>Building</span>
-                </div>
-              </div>
-
-              <div className="project-footer">
-                <span>Something new is loading...</span>
-                <b>↗</b>
-              </div>
-            </article>
-          </div>
+        <div className="projects-footer">
+          <span>04</span>
+          <span>SELECTED WORK / 2026</span>
+          <span>JAYESH DEVLEY</span>
         </div>
       </section>
 
-      <section id="experience" className="section">
-        <div className="label">04 / EXPERIENCE</div>
+      <section id="experience" className="experience-section">
+        <div className="section-heading">
+          <span className="section-index">05 / EXPERIENCE</span>
+          <span className="section-rule" />
+          <span className="section-note">THE JOURNEY SO FAR</span>
+        </div>
 
-        <div className="section-grid">
+        <div className="experience-intro">
           <div>
-            <span className="kicker">THE JOURNEY</span>
+            <p className="experience-eyebrow">NO SHORTCUTS</p>
 
-            <h3>
-              Building the <span>foundation.</span>
-            </h3>
-
-            <p className="intro">
-              A journey of learning, experimenting, and turning ideas into
-              practical digital products.
-            </p>
+            <h2>
+              Learning
+              <br />
+              by <em>doing.</em>
+            </h2>
           </div>
 
-          <div className="timeline">
-            <article>
-              <small>01 / CURRENT</small>
+          <p className="experience-description">
+            I&apos;m still at the beginning of the journey. Instead of filling
+            this space with titles I haven&apos;t earned, I&apos;d rather show
+            what I&apos;m actually learning, building, and working towards.
+          </p>
+        </div>
 
-              <div>
-                <strong>Developer in the Making</strong>
+        <div className="experience-timeline">
+          <article className="experience-item experience-current">
+            <div className="experience-marker">
+              <span>01</span>
+              <b />
+            </div>
 
-                <p>
-                  Building strong foundations in web development, programming,
-                  UI/UX, APIs, databases, and modern software development.
-                </p>
+            <div className="experience-date">
+              <span>NOW</span>
+              <small>2026</small>
+            </div>
 
-                <div className="tags">
-                  <span>Web Development</span>
-                  <span>Programming</span>
-                  <span>UI/UX</span>
-                </div>
+            <div className="experience-content">
+              <span className="experience-label">CURRENT PHASE</span>
+
+              <h3>Developer in the Making</h3>
+
+              <p>
+                Building a strong foundation through hands-on work with web
+                development, programming, UI/UX, APIs, databases, and AI.
+              </p>
+
+              <div className="experience-tags">
+                <span>LEARNING</span>
+                <span>EXPERIMENTING</span>
+                <span>BUILDING</span>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <article>
-              <small>02 / BUILDING</small>
+          <article className="experience-item">
+            <div className="experience-marker">
+              <span>02</span>
+              <b />
+            </div>
 
-              <div>
-                <strong>CampusFlow</strong>
+            <div className="experience-date">
+              <span>2026</span>
+              <small>PROJECT</small>
+            </div>
 
-                <p>
-                  Designing and documenting an ambitious education technology
-                  platform connecting schools, coaching centers, teachers,
-                  students, parents, and administrators.
-                </p>
+            <div className="experience-content">
+              <span className="experience-label">IN DEVELOPMENT</span>
 
-                <div className="tags">
-                  <span>Education</span>
-                  <span>SaaS</span>
-                  <span>AI</span>
-                </div>
+              <h3>CampusFlow</h3>
+
+              <p>
+                Exploring an education technology platform designed to bring
+                administration, learning, communication, and everyday
+                educational workflows into one connected experience.
+              </p>
+
+              <div className="experience-tags">
+                <span>PRODUCT</span>
+                <span>EDUCATION</span>
+                <span>SAAS</span>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <article>
-              <small>03 / NEXT</small>
+          <article className="experience-item experience-next">
+            <div className="experience-marker">
+              <span>03</span>
+              <b />
+            </div>
 
-              <div>
-                <strong>Real-World Products</strong>
+            <div className="experience-date">
+              <span>NEXT</span>
+              <small>UP AHEAD</small>
+            </div>
 
-                <p>
-                  Turning concepts into production-ready applications, learning
-                  from real users, and continuously improving through
-                  experimentation and feedback.
-                </p>
+            <div className="experience-content">
+              <span className="experience-label">WHAT COMES NEXT</span>
 
-                <div className="tags">
-                  <span>Products</span>
-                  <span>Experiments</span>
-                  <span>Innovation</span>
-                </div>
+              <h3>First Production Projects</h3>
+
+              <p>
+                Turning experiments and learning into polished products,
+                shipping real work, and continuing to learn from every project
+                along the way.
+              </p>
+
+              <div className="experience-tags">
+                <span>SHIP</span>
+                <span>LEARN</span>
+                <span>REPEAT</span>
               </div>
-            </article>
-          </div>
+            </div>
+          </article>
+        </div>
+
+        <div className="experience-note">
+          <span>PERSONAL NOTE / 05</span>
+
+          <p>
+            I&apos;m not in a rush to look experienced.
+            <br />
+            I&apos;m focused on becoming experienced.
+          </p>
+        </div>
+
+        <div className="experience-footer">
+          <span>05</span>
+          <span>THE JOURNEY IS STILL BEING WRITTEN</span>
+          <span>JAYESH DEVLEY</span>
         </div>
       </section>
 
-      <section id="play" className="section play-section">
-        <div className="label">05 / PLAY</div>
+      <section id="play" className="play-section">
+        <div className="section-heading">
+          <span className="section-index">06 / PLAY</span>
+          <span className="section-rule" />
+          <span className="section-note">A SMALL EXPERIMENT</span>
+        </div>
 
-        <div className="play-header">
+        <div className="play-intro">
           <div>
-            <span className="kicker">INTERACTIVE LAB</span>
+            <p className="play-eyebrow">TAKE A BREAK</p>
 
-            <h3>
-              Code <span>Runner.</span>
-            </h3>
-
-            <p className="intro">
-              A small game built into my portfolio. Collect the energy, avoid
-              the bugs, and see how high you can score.
-            </p>
+            <h2>
+              A little
+              <br />
+              <em>something to play.</em>
+            </h2>
           </div>
 
-          <div className="game-status">
+          <p className="play-description">
+            I built this small game as an experiment in interaction, movement,
+            and timing. Collect energy, avoid errors, and see how long you can
+            keep going.
+          </p>
+        </div>
+
+        <div className="game-paper">
+          <div className="game-header">
+            <div>
+              <span className="game-label">JAYESH DEVLEY / EXPERIMENT 01</span>
+              <h3>CODE RUNNER</h3>
+            </div>
+
+            <div className="game-status">
+              <span>STATUS</span>
+              <strong>
+                {gameRunning ? "RUNNING" : gameOver ? "FINISHED" : "READY"}
+              </strong>
+            </div>
+          </div>
+
+          <div className="game-stats">
             <div>
               <span>SCORE</span>
-
-              <strong id="game-score">
-                {String(gameScore).padStart(4, "0")}
-              </strong>
+              <strong>{gameScore}</strong>
             </div>
 
             <div>
-              <span>BEST</span>
-
-              <strong id="game-best">
-                {String(gameBest).padStart(4, "0")}
-              </strong>
+              <span>LEVEL</span>
+              <strong>{gameLevel}</strong>
             </div>
 
             <div>
               <span>COMBO</span>
+              <strong>{gameCombo}</strong>
+            </div>
 
-              <strong id="game-combo">×{gameCombo}</strong>
+            <div>
+              <span>BEST</span>
+              <strong>{gameBest}</strong>
             </div>
           </div>
 
-          <div className="game-container">
-            <div className="game-topbar">
-              <span>
-                <i className="status-dot"></i>
-                SYSTEM ONLINE
-              </span>
+          <div className="game-board-wrap">
+            <div className="game-board">
+              <div className="game-screen" id="game-screen">
+                <div className="game-grid" />
 
-              <span>
-                LEVEL{" "}
-                <strong id="game-level">
-                  {String(gameLevel).padStart(2, "0")}
-                </strong>
-              </span>
-            </div>
+                {!gameRunning && (
+                  <div className="game-message">
+                    <span>{gameOver ? "SYSTEM FAILURE" : "CODE RUNNER"}</span>
 
-            <div className="game-screen" id="game-screen">
-              <div className="game-grid"></div>
+                    <strong>
+                      {gameOver ? (
+                        <>
+                          Game <em>Over.</em>
+                        </>
+                      ) : (
+                        <>
+                          Ready to <em>run?</em>
+                        </>
+                      )}
+                    </strong>
 
-              {!gameRunning && (
-                <div className="game-message" id="game-message">
-                  <span>{gameOver ? "SYSTEM FAILURE" : "CODE RUNNER"}</span>
-
-                  <strong>
-                    {gameOver ? (
-                      <>
-                        Game <em>Over.</em>
-                      </>
-                    ) : (
-                      <>
-                        Ready to <em>run?</em>
-                      </>
+                    {gameOver && (
+                      <small>
+                        Final score: {String(gameScore).padStart(4, "0")}
+                      </small>
                     )}
-                  </strong>
 
-                  {gameOver && (
-                    <small>
-                      Final score: {String(gameScore).padStart(4, "0")}
-                    </small>
-                  )}
+                    <button
+                      className="game-start-button"
+                      onClick={() => {
+                        setGameScore(0);
+                        setGameLevel(1);
+                        setGameCombo(0);
 
-                  <button
-                    id="start-game"
-                    onClick={() => {
-                      setGameScore(0);
-                      setGameLevel(1);
-                      setGameCombo(0);
+                        gameLevelRef.current = 1;
+                        comboRef.current = 0;
 
-                      gameLevelRef.current = 1;
-                      comboRef.current = 0;
+                        playerPosition.current = 50;
 
-                      playerPosition.current = 50;
+                        setGameOver(false);
+                        setGameRunning(true);
 
-                      setGameOver(false);
-                      setGameRunning(true);
+                        const player = document.getElementById("game-player");
 
-                      const player = document.getElementById("game-player");
+                        if (player) {
+                          player.style.left = "50%";
+                        }
+                      }}
+                    >
+                      {gameOver ? "PLAY AGAIN ↗" : "START GAME ↗"}
+                    </button>
 
-                      if (player) {
-                        player.style.left = "50%";
-                      }
-                    }}
-                  >
-                    {gameOver ? "PLAY AGAIN ↗" : "START GAME ↗"}
-                  </button>
+                    {!gameOver && <small>Use ← → or A / D to move</small>}
+                  </div>
+                )}
 
-                  {!gameOver && <small>Use ← → or A / D to move</small>}
+                <div className="player" id="game-player">
+                  &lt;/&gt;
                 </div>
-              )}
-
-              <div className="player" id="game-player">
-                &lt;/&gt;
               </div>
             </div>
 
             <div className="game-controls">
+              <div>
+                <button
+                  type="button"
+                  className="control-key"
+                  aria-label="Move left"
+                  onClick={() => {
+                    playerPosition.current = Math.max(
+                      8,
+                      playerPosition.current - 6,
+                    );
+
+                    const player = document.getElementById("game-player");
+
+                    if (player) {
+                      player.style.left = `${playerPosition.current}%`;
+                    }
+                  }}
+                >
+                  ←
+                </button>
+
+                <button
+                  type="button"
+                  className="control-key"
+                  aria-label="Move right"
+                  onClick={() => {
+                    playerPosition.current = Math.min(
+                      92,
+                      playerPosition.current + 6,
+                    );
+
+                    const player = document.getElementById("game-player");
+
+                    if (player) {
+                      player.style.left = `${playerPosition.current}%`;
+                    }
+                  }}
+                >
+                  →
+                </button>
+
+                <small>MOVE</small>
+              </div>
+
+              <p>
+                Desktop: use your arrow keys
+                <br />
+                Mobile: use the controls below
+              </p>
+
+              <div className="mobile-controls">
+                <button
+                  type="button"
+                  aria-label="Move left"
+                  onClick={() => {
+                    playerPosition.current = Math.max(
+                      8,
+                      playerPosition.current - 6,
+                    );
+
+                    const player = document.getElementById("game-player");
+
+                    if (player) {
+                      player.style.left = `${playerPosition.current}%`;
+                    }
+                  }}
+                >
+                  ←
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="Move right"
+                  onClick={() => {
+                    playerPosition.current = Math.min(
+                      92,
+                      playerPosition.current + 6,
+                    );
+
+                    const player = document.getElementById("game-player");
+
+                    if (player) {
+                      player.style.left = `${playerPosition.current}%`;
+                    }
+                  }}
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            <div className="game-footer">
+              <span>CODE / MOTION / TIMING</span>
+              <span>BUILT FOR FUN</span>
+            </div>
+          </div>
+
+          <div className="game-controls">
+            <div>
+              <span className="control-key">←</span>
+              <span className="control-key">→</span>
+              <small>MOVE</small>
+            </div>
+
+            <p>
+              Desktop: use your arrow keys
+              <br />
+              Mobile: use the controls below
+            </p>
+
+            <div className="mobile-controls">
               <button
-                id="move-left"
-                onClick={() => {
-                  playerPosition.current = Math.max(
-                    8,
-                    playerPosition.current - 6,
+                type="button"
+                aria-label="Move left"
+                onPointerDown={() => {
+                  window.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                      key: "ArrowLeft",
+                    }),
                   );
-
-                  const player = document.getElementById("game-player");
-
-                  if (player) {
-                    player.style.left = `${playerPosition.current}%`;
-                  }
                 }}
               >
                 ←
               </button>
 
               <button
-                id="move-right"
-                onClick={() => {
-                  playerPosition.current = Math.min(
-                    92,
-                    playerPosition.current + 6,
+                type="button"
+                aria-label="Move right"
+                onPointerDown={() => {
+                  window.dispatchEvent(
+                    new KeyboardEvent("keydown", {
+                      key: "ArrowRight",
+                    }),
                   );
-
-                  const player = document.getElementById("game-player");
-
-                  if (player) {
-                    player.style.left = `${playerPosition.current}%`;
-                  }
                 }}
               >
                 →
               </button>
-
-              <span>
-                COLLECT <b>◆</b> ENERGY
-              </span>
             </div>
           </div>
+
+          <div className="game-footer">
+            <span>CODE / MOTION / TIMING</span>
+            <span>BUILT FOR FUN</span>
+          </div>
+        </div>
+
+        <div className="play-note">
+          <span>FIELD NOTE / 06</span>
+
+          <p>
+            Sometimes the best way to learn
+            <br />
+            is to make something playful.
+          </p>
+        </div>
+
+        <div className="play-footer">
+          <span>06</span>
+          <span>PLAY / EXPERIMENT / REPEAT</span>
+          <span>JAYESH DEVLEY</span>
         </div>
       </section>
 
@@ -1186,10 +1630,68 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
-        <span>JD / JAYESH DEVLEY</span>
-        <span>BUILDING IDEAS INTO REALITY</span>
-        <span>© 2026</span>
+      <footer className="site-footer">
+        <div className="footer-main">
+          <div className="footer-brand">
+            <button
+              className="footer-logo"
+              onClick={() => go("Home")}
+              aria-label="Back to home"
+            >
+              JD<span>.</span>
+            </button>
+
+            <h3>Jayesh Devley</h3>
+
+            <p>
+              Exploring ideas, building skills, and creating things that matter.
+            </p>
+
+            <span className="footer-location">BASED IN INDIA · 2026</span>
+          </div>
+
+          <div className="footer-nav">
+            <h4>EXPLORE</h4>
+            <button onClick={() => go("Home")}>Home</button>
+            <button onClick={() => go("About")}>About</button>
+            <button onClick={() => go("Skills")}>Skills</button>
+            <button onClick={() => go("Projects")}>Projects</button>
+            <button onClick={() => go("Experience")}>Experience</button>
+            <button onClick={() => go("Play")}>Play</button>
+          </div>
+
+          <div className="footer-connect">
+            <h4>LET&apos;S CONNECT</h4>
+            <p>Have an idea or want to collaborate?</p>
+
+            <a href="mailto:devleyj@gmail.com">
+              Email me <span>↗</span>
+            </a>
+
+            <a
+              href="https://github.com/devleyj"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub <span>↗</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/jayesh-devley-6b028a37a/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <span>JD / JAYESH DEVLEY</span>
+          <span>BUILDING IDEAS INTO REALITY</span>
+          <span>© 2026</span>
+          <button onClick={() => go("Home")}>BACK TO TOP ↑</button>
+        </div>
       </footer>
     </main>
   );
